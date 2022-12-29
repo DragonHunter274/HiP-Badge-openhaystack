@@ -1,0 +1,157 @@
+menu "Blinkenlights Configuration"
+
+    config WS2812_MAX_LEDS
+        int "Max. LED strip length"
+        default 16
+        help
+            Maximum supported length of LED strip.
+
+    choice
+        prompt "Pixel Type"
+        default BLINKEN_TYPE_GRB
+
+        config BLINKEN_TYPE_GRB
+            bool 'GRB (WS2812b)'
+
+        config BLINKEN_TYPE_RGB
+            bool 'RGB (SK6812)'
+
+        config BLINKEN_TYPE_RGBW
+            bool 'RGBW'
+    endchoice
+
+    config WS2812_DATA_PIN
+        int "Led data output pin"
+        default 10
+        help
+            GPIO pin used for sending LED data out.
+
+    config WS2812_INVERT_SPI
+        bool "Invert SPI data stream"
+        default y 
+        help
+            Workaround for high level on idle data line
+
+    choice
+        prompt "Blinken Target"
+        default BLINKEN_BADGE
+        help
+            Type of animation to use.
+
+        config BLINKEN_BADGE
+            bool 'HIP22 Badge'
+
+        config BLINKEN_RAINBOW
+            bool 'Simple Rainbow Strip'
+
+        config BLINKEN_EYES
+            bool 'Glowing Eyes'
+    endchoice
+
+    config BLINKEN_BUTTONS
+        bool "Enable Buttons"
+        default y
+
+    menu "Button Configuration"
+        depends on BLINKEN_BUTTONS
+
+        config BLINKEN_BUTTON_0
+            int "Button 0 GPIO"
+            default 2
+
+        config BLINKEN_BUTTON_1
+            int "Button 1 GPIO"
+            default 8
+
+        config BLINKEN_BUTTON_2
+            int "Button 2 GPIO"
+            default 9
+    endmenu
+
+    config BLINKEN_ROTENC
+        bool "Enable Rotary Encoder"
+        default n
+
+    menu "Rotary Encoder Configuration"
+        depends on BLINKEN_ROTENC
+
+        config BLINKEN_ROTENC_A
+            int "Encoder-A GPIO"
+            default 2
+
+        config BLINKEN_ROTENC_B
+            int "Encoder-B GPIO"
+            default 8
+
+    endmenu
+
+    config BLINKEN_RMT
+        bool "Enable IR Remote Control"
+        default y
+
+    menu "IR Remote Control Configuration"
+        depends on BLINKEN_RMT
+
+        choice BLINKEN_RMT_PROTOCOL
+            prompt "Infrared Protocol"
+            default BLINKEN_RMT_PROTO_NEC
+            help
+                Choose the IR protocol used.
+
+            config BLINKEN_RMT_PROTO_NEC
+                bool "NEC"
+                help
+                    NEC is a kind of Pulse Distance Protocol.
+                    It uses ASK modulation and pulse distance encoding with a carrier frequency of 38 kHz.
+
+            config BLINKEN_RMT_PROTO_RC5
+                bool "RC5"
+                help
+                    The RC5 protocol was introduced by Philips.
+                    It uses ASK modulation and Manchester encoding with carrier frequency fixed at 36 kHz.
+        endchoice
+
+        config BLINKEN_RMT_RX_GPIO
+            int "RMT RX GPIO"
+            default 3
+            help
+                Set the GPIO number used for receiving the RMT signal.
+
+        config BLINKEN_RMT_TX_GPIO
+            int "RMT TX GPIO"
+            default 7
+            help
+                Set the GPIO number used for sending the RMT signal.
+
+    endmenu
+
+    config BLINKEN_GAS
+        bool "Enable Gas Sensor"
+        default y
+
+    menu "Gas Sensor Configuration"
+        depends on BLINKEN_GAS
+
+        config BLINKEN_GAS_I2C_SCL
+            int "I2C SCL GPIO"
+            default 6
+
+        config BLINKEN_GAS_I2C_SDA
+            int "I2C SDA GPIO"
+            default 5
+
+        config BLINKEN_GAS_I2C_PORT
+            int "I2C Port Number"
+            default 0
+            help
+                Port number for I2C Master device.
+
+        config BLINKEN_GAS_I2C_FREQ
+            int "I2C Master Frequency"
+            default 100000
+            help
+                I2C Speed of Master device.
+
+    endmenu
+
+endmenu
