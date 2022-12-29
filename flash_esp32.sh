@@ -2,7 +2,7 @@
 
 cleanup() {
     echo "cleanup ..."
-    #rm "$KEYFILE"
+    rm "$KEYFILE"
 }
 
 # Directory of this script
@@ -120,7 +120,11 @@ fi
 
 # Prepare the key
 KEYFILE="$SCRIPT_DIR/tmp.key"
-#echo "$PUBKEY" | python3 -m base64 -d - > "$KEYFILE"
+if [[ -f "$KEYFILE" ]]; then
+    echo "$KEYFILE already exists, stopping here not to override files..."
+    exit 1
+fi
+echo "$PUBKEY" | python3 -m base64 -d - > "$KEYFILE"
 if [[ $? != 0 ]]; then
     echo "Could not parse the public key. Please provide valid base64 input"
     exit 1
